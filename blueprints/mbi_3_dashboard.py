@@ -72,7 +72,7 @@ def index():
     """Renderiza la página principal del dashboard."""
     return render_template('dashboard_mbi_3.html')
 
-# --- RUTAS DE API ACTUALIZADAS Y NUEVAS ---
+# --- RUTAS DE API ---
 
 @mbi_3_bp.route('/api/production_results')
 def production_results():
@@ -90,7 +90,7 @@ def production_results():
     cursor.close()
     conn.close()
     
-    # Asumimos que 2=OK, cualquier otro es NOK. ¡Ajusta si es necesario!
+    # Asumo que 2=OK, cualquier otro es NOK.
     ok_count = sum(1 for row in results if row[0] == 2) 
     nok_count = len(results) - ok_count
 

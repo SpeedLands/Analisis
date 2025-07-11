@@ -1,4 +1,3 @@
-# blueprints/eiaf_dashboard.py
 import json
 from flask import Blueprint, render_template, jsonify, request
 import mysql.connector
@@ -11,7 +10,7 @@ eiaf_bp = Blueprint('eiaf', __name__, template_folder='templates')
 DB_CONFIG_EIAF = {
     'host': 'localhost',
     'user': 'root', 
-    'password': '', # ¡CAMBIA ESTO POR TU CONTRASEÑA!
+    'password': '',
     'database': 'eiaf',
 }
 
@@ -99,7 +98,7 @@ def retry_causes():
     labels, data = (zip(*most_common)) if most_common else ([], [])
     return jsonify({"labels": list(labels), "data": list(data)})
 
-# --- NUEVA API: Obtener lista de usuarios ---
+# --- API: Obtener lista de usuarios ---
 @eiaf_bp.route('/api/users')
 def get_users():
     conn = get_db_connection()
@@ -112,7 +111,7 @@ def get_users():
     conn.close()
     return jsonify(users)
 
-# --- NUEVA API: Producción por usuario ---
+# --- API: Producción por usuario ---
 @eiaf_bp.route('/api/user_production')
 def user_production():
     conn = get_db_connection()
@@ -120,7 +119,6 @@ def user_production():
     cursor = conn.cursor(dictionary=True)
     sql_where, params = build_where_clause()
     
-    # Esta es la línea que debes reemplazar
     query = f"SELECT SUBSTRING_INDEX(USUARIO, ': ', -1) as clean_user, COUNT(ID) as total FROM historial {sql_where} {'AND' if sql_where else 'WHERE'} USUARIO IS NOT NULL AND USUARIO != '' GROUP BY clean_user ORDER BY total DESC"
     
     cursor.execute(query, params)
@@ -131,7 +129,7 @@ def user_production():
     data = [row['total'] for row in rows]
     return jsonify({"labels": labels, "data": data})
 
-# --- NUEVA API: Tiempo de ciclo promedio por día ---
+# --- API: Tiempo de ciclo promedio por día ---
 @eiaf_bp.route('/api/cycle_time')
 def cycle_time():
     conn = get_db_connection()
@@ -139,7 +137,6 @@ def cycle_time():
     cursor = conn.cursor(dictionary=True)
     sql_where, params = build_where_clause()
 
-    # Esta es la consulta que debes reemplazar
     query = f"""
         SELECT 
             DATE(INICIO) as production_day, 
@@ -158,7 +155,7 @@ def cycle_time():
     data = [round(row['avg_cycle_time'], 2) if row['avg_cycle_time'] else 0 for row in rows]
     return jsonify({"labels": labels, "data": data})
 
-# --- NUEVA API: Análisis de amperaje de fusibles ---
+# --- API: Análisis de amperaje de fusibles ---
 @eiaf_bp.route('/api/fuse_amperage')
 def fuse_amperage():
     conn = get_db_connection()
@@ -189,7 +186,7 @@ def fuse_amperage():
     labels, data = (zip(*most_common)) if most_common else ([], [])
     return jsonify({"labels": list(labels), "data": list(data)})
 
-# --- NUEVA API: Últimos registros ---
+# --- API: Últimos registros ---
 @eiaf_bp.route('/api/latest_records')
 def latest_records():
     conn = get_db_connection()

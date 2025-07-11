@@ -72,7 +72,7 @@ def index():
     """Renderiza la página principal del dashboard."""
     return render_template('dashboard_mbi_2.html')
 
-# --- RUTAS DE API ACTUALIZADAS Y NUEVAS ---
+# --- RUTAS DE API ---
 
 @mbi_2_bp.route('/api/production_results')
 def production_results():
@@ -90,7 +90,7 @@ def production_results():
     cursor.close()
     conn.close()
     
-    # Asumimos que 2=OK, cualquier otro es NOK. ¡Ajusta si es necesario!
+    # Asumo que 2=OK, cualquier otro es NOK.
     ok_count = sum(1 for row in results if row[0] == 2) 
     nok_count = len(results) - ok_count
 
@@ -151,8 +151,6 @@ def production_timeline():
     labels = [row['production_day'].strftime('%Y-%m-%d') for row in rows]
     data = [row['total'] for row in rows]
     return jsonify({"labels": labels, "data": data})
-
-# --- NUEVAS RUTAS DE API ---
 
 @mbi_2_bp.route('/api/users')
 def get_users():
