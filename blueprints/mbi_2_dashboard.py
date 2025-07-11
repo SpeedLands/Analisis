@@ -7,11 +7,10 @@ from datetime import datetime, timedelta
 mbi_2_bp = Blueprint('mbi_2', __name__, template_folder='templates')
 
 # --- CONFIGURACIÓN DE LA BASE DE DATOS ---
-# ¡Asegúrate de que estos datos sean correctos!
 DB_CONFIG_MBI_2 = {
     'host': 'localhost',
     'user': 'root', 
-    'password': '', # ¡CAMBIA ESTO!
+    'password': '',
     'database': 'eva_mbi_2',
 }
 
